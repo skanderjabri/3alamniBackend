@@ -16,7 +16,7 @@ export class UsersService {
       const hashedPassword = await bcrypt.hash(body.password, salt);
       body.password = hashedPassword;
       const newUser = await this.userModel.create(body);
-      return { msg: 'ok', user: newUser, status: HttpStatus.CREATED };
+      return { message: 'ok', user: newUser, status: HttpStatus.CREATED };
     } catch (error) {
       throw new HttpException(
         'Failed to create user',
@@ -41,13 +41,13 @@ export class UsersService {
   Login = async (email: string, password: string) => {
     const user = await this.userModel.findOne({ email });
     if (!user) {
-      return { msg: 'Utilisateur non trouvé', status: HttpStatus.OK };
+      return { message: 'Utilisateur non trouvé', status: HttpStatus.OK };
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return { msg: 'Mot de passe incorrect', status: HttpStatus.OK };
+      return { message: 'Mot de passe incorrect', status: HttpStatus.OK };
     }
-    return { msg: 'ok', user, status: HttpStatus.OK };
+    return { message: 'ok', user, status: HttpStatus.OK };
   };
 
   ChangeEtat = async (id: string) => {

@@ -39,7 +39,6 @@ export class UsersController {
   FindOne(@Param() { id }) {
     return this.service.FindOne(id);
   }
-  //
   @Put('/:id')
   Update(@Param('id') id: string, @Body() body: UserDto) {
     return this.service.Update(id, body);

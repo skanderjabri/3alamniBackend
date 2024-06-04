@@ -3,11 +3,9 @@ import { extname } from 'path';
 
 export const multerConfig = {
   storage: diskStorage({
-    destination: './public/uploads/users',
+    destination: './public/uploads',
     filename: (req, file, callback) => {
       const extension = extname(file.originalname);
-      console.log(file.originalname);
-      console.log(extension);
       const randomName = '3lamani' + Date.now() + extension;
       callback(null, randomName);
     },

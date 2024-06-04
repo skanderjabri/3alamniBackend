@@ -12,25 +12,14 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { UsersService } from './users.service';
-import { UserDto } from 'src/dto/users.dto';
-import { multerConfig } from '../Config/multer.config';
+import { UsersService } from './User.service';
+import { UserDto } from 'src/dto/User.dto';
+import { multerConfig } from '../../Config/multer.config';
+
 @Controller('users')
 export class UsersController {
-  private imageDefault = 'MyPharamacieDefaultuser.png';
   constructor(private readonly service: UsersService) {}
 
-  @Post('/CreateUser')
-  @UseInterceptors(FileInterceptor('image', multerConfig)) // Use multer for image upload
-  async Add(@Body() body: UserDto, @UploadedFile() image: Express.Multer.File) {
-    if (image) {
-      body.image = image.filename;
-    } else {
-      body.image = this.imageDefault;
-    }
-
-    return this.service.Add(body);
-  }
   @Get('/GetAllUsers')
   FindAll() {
     return this.service.FindAll();

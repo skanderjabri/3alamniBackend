@@ -1,13 +1,16 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from 'src/Users/Users.models';
-import { UserDto } from 'src/dto/users.dto';
+import { User } from 'src/Providers/Users/User.model';
+import { FileInterceptor } from '@nestjs/platform-express';
+
+import { UserDto } from 'src/dto/User.dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  private imageDefault = 'MyPharamacieDefaultuser.png';
 
   Add = async (body: UserDto) => {
     try {
@@ -16,7 +19,11 @@ export class UsersService {
       const hashedPassword = await bcrypt.hash(body.password, salt);
       body.password = hashedPassword;
       const newUser = await this.userModel.create(body);
-      return { message: 'ok', user: newUser, status: HttpStatus.CREATED };
+      return {
+        message: 'ok',
+        user: newUser,
+        status: HttpStatus.CREATED,
+      };
     } catch (error) {
       throw new HttpException(
         'Failed to create user',
@@ -45,7 +52,11 @@ export class UsersService {
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return { message: 'Mot de passe incorrect', status: HttpStatus.OK };
+      return {
+        message: 'Mot de passe incorrect',
+        status: HttpStatus.OK,
+        user: user,
+      };
     }
     return { message: 'ok', user, status: HttpStatus.OK };
   };
